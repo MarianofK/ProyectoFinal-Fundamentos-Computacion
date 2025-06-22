@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
 project(Battlearcher)
 
 # Hide the console window
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
+if (WIN32)
+   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
+endif ()
 
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
