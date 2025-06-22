@@ -1,6 +1,14 @@
 #include "map.h"
+#include "player.h"
 
 Texture2D brickWall = {0};
+
+void InitMap(){
+    Image wall = LoadImage(ASSETS_PATH "/map/brickWall.png");
+    ImageResize(&wall, TILE_SIZE, TILE_SIZE);
+    brickWall = LoadTextureFromImage(wall);
+    UnloadImage(wall);
+}
 
 void DrawMap() {
     for (int y = 0; y < MAP_HEIGHT; y++) {
@@ -10,9 +18,10 @@ void DrawMap() {
     }
 }
 
-Collision CheckCollisionWithMap(Vector2 direction, Vector2 *position, float offset) {
+Collision CheckCollisionWithMap(Vector2 direction, Vector2 *position, float offset, bool isProjectile, float damage) {
     Collision result = {0};
     result.hasColided = false;
+    result.withPlayer = false;
     result.normal = (Vector2){0, 0};
 
     // Proyectar movimiento
@@ -70,6 +79,30 @@ Collision CheckCollisionWithMap(Vector2 direction, Vector2 *position, float offs
                     return result;
                 }
             }
+
+            if(isProjectile){
+                Rectangle player1Rect = {
+                    player1.position.x - TILE_SIZE / 2,
+                    player1.position.y - TILE_SIZE / 2,
+                    TILE_SIZE,
+                    TILE_SIZE
+                };
+                Rectangle player2Rect = {
+                    player2.position.x - TILE_SIZE / 2,
+                    player2.position.y - TILE_SIZE / 2,
+                    TILE_SIZE,
+                    TILE_SIZE
+                };
+                if(CheckCollisionRecs(player1Rect, nextRect)){
+                    result.withPlayer = true;
+                    player1.life -= damage;
+                }
+                if(CheckCollisionRecs(player2Rect, nextRect)){
+                    result.withPlayer = true;
+                    player2.life -= damage;
+                }
+            }
+
         }
     }
 

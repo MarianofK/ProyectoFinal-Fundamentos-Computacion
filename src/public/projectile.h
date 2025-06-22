@@ -3,19 +3,19 @@
 
 #include "raylib.h"
 #include "raymath.h"
-#include "player.h"
 #include "map.h"
 
 #include <stdlib.h>
 #include <math.h>
 
-/// @brief Contiene | direction(Vector2) | position(Vector2) | damage(float) | range(float) | speed(float) | previous(self) | next(self) |
+/// @brief Estructura del proyectil
 typedef struct Projectile {
     Vector2 direction;
     Vector2 position;
     float damage;
     float range;
     float speed;
+    int owner;
     struct Projectile *previous;
     struct Projectile *next;
 } Projectile;
@@ -23,9 +23,16 @@ typedef struct Projectile {
 /// @brief Almacena los proyectiles activos en el mapa
 extern Projectile* projectile_in_level;
 
+/// @brief Arbol de proyectiles
+extern Projectile* projectiles;
+
+/// @brief Inicializa los proyectiles
+void InitProjectiles();
+
 /// @brief Dispara un proyectile desde la posicion del jugador
-/// @param player Referencia del jugador
-void Shoot(Projectile *projectile, Player *player);
+/// @param playerPosition Posicion del jugador
+/// @param playerDirection Direccion del jugador
+void Shoot(Projectile *projectile, Vector2 playerPosition, Vector2 playerDirection);
 
 /// @brief Actualiza cada proyectil en pantalla y si llegaron a su limite los elimina
 void UpdateProjectile();

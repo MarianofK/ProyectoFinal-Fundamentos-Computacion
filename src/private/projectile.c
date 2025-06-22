@@ -1,13 +1,25 @@
 #include "projectile.h"
 
-Projectile* projectile_in_level = NULL;
+Projectile *projectile_in_level = NULL;
 
-void Shoot(Projectile *projectile, Player *player){
+Projectile *projectiles = NULL;
 
-    // Calcular vector director
-    Vector2 mousePos = GetMousePosition();
-    Vector2 finalPos = (Vector2){(mousePos.x - player->position.x), (mousePos.y - player->position.y)};
-    float module = sqrtf( finalPos.x * finalPos.x + finalPos.y * finalPos.y);
+void InitProjectiles(){
+    
+    Projectile *initial = malloc(sizeof(Projectile));
+
+    *initial = (Projectile) {
+        (Vector2){ 0, 0 },
+        (Vector2){ 0, 0 },
+        10.f,
+        400.f,
+        500.f
+    };
+
+    projectiles = initial;
+}
+
+void Shoot(Projectile *projectile, Vector2 playerPosition, Vector2 playerDirection){
 
     Projectile* newProjectile = malloc(sizeof(Projectile));
     newProjectile->damage = projectile->damage;
@@ -15,8 +27,8 @@ void Shoot(Projectile *projectile, Player *player){
     newProjectile->range = projectile->range;
 
     // Inicializar la direccion y posicion
-    newProjectile->direction = (Vector2){finalPos.x / module, finalPos.y / module};
-    newProjectile->position = (Vector2){player->position.x, player->position.y + 10};
+    newProjectile->direction = playerDirection;
+    newProjectile->position = (Vector2){playerPosition.x + (playerDirection.x * (PLAYER_SIZE)), playerPosition.y + (playerDirection.y * (PLAYER_SIZE))};
 
     // Apilar el nuevo proyectil
     newProjectile->next = projectile_in_level;
@@ -33,7 +45,7 @@ void UpdateProjectile(){
         Projectile* toDelete = NULL;
 
         while (current != NULL){
-            Collision collision = CheckCollisionWithMap(current->direction, &current->position, 5);
+            Collision collision = CheckCollisionWithMap(current->direction, &current->position, 5, true, current->damage);
             if(collision.hasColided){
                 current->direction = Reflection(current->direction, collision.normal);
             }
@@ -44,7 +56,7 @@ void UpdateProjectile(){
             current->position.x += dx;
             current->position.y += dy;
             current->range -= module;
-            if (current->range <= 0) {
+            if (current->range <= 0 || collision.withPlayer) {
                 toDelete = current;
                 current = current->next;
                 if (aux == NULL) {

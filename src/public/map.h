@@ -25,13 +25,18 @@ static int map[MAP_HEIGHT][MAP_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1}
 };
 
-extern Texture2D brickWall;
-
 /// @brief Representa la colision con el mapa
 typedef struct Collision{
     Vector2 normal;
     bool hasColided;
+    bool withPlayer;
 } Collision;
+
+/// @brief Textura de los muros (ladrillos)
+extern Texture2D brickWall;
+
+/// @brief Inicializa los recursos del mapa
+void InitMap();
 
 /// @brief Dibuja la matriz de puntos del mapa
 void DrawMap();
@@ -41,6 +46,6 @@ void DrawMap();
 /// @param position Posicion del personaje
 /// @param offset Desplazamiento del objeto
 /// @return Retorna un TRUE si hay colision, caso contrario es FALSE
-Collision CheckCollisionWithMap(Vector2 direction, Vector2 *position, float offset);
+Collision CheckCollisionWithMap(Vector2 direction, Vector2 *position, float offset, bool isProjectile, float damage);
 
 #endif

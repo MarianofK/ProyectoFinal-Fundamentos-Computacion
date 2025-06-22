@@ -2,7 +2,7 @@
 #define MAIN_H
 
 #include "raylib.h"
-#include "main_menu.h"
+#include "menu.h"
 #include "settings.h"
 #include "player.h"
 #include "map.h"

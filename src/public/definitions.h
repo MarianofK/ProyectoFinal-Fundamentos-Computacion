@@ -16,6 +16,10 @@ typedef enum {
     STATE_EXIT
 } GameState;
 
+
+/// @brief Estado del juego
+extern GameState state;
+
 /// @brief Control de dimensiones
 extern int screenWidth;
 extern int screenHeight;

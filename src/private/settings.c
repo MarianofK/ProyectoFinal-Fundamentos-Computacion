@@ -49,12 +49,11 @@ float GetVolume() {
     return volume;
 }
 
-GameState BackToMenu() {
+void BackToMenu() {
     Vector2 mouse = GetMousePosition();
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         if (CheckCollisionPointRec(mouse, backButton)) {
-            return STATE_MENU;
+            state = STATE_MENU;
         }
     }
-    return STATE_SETTINGS;
 }

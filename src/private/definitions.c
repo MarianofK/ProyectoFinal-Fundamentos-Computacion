@@ -2,3 +2,5 @@
 
 int screenWidth = initialWidth;
 int screenHeight = initialHeight;
+
+GameState state = STATE_MENU;

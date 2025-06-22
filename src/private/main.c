@@ -2,72 +2,58 @@
 
 int main(void) {
 
-  InitializeWindow(); // Inicializa la ventana
-  InitAudioDevice();  // Funcion de raylib
-  InitSettings();     // Inicializa el volumen
+    InitializeWindow();
+    InitAudioDevice();
+    InitSettings();
+    InitMap();
+    InitArchs();
+    InitProjectiles();
 
-  GameState state = STATE_MENU;
+    while (!WindowShouldClose() && state != STATE_EXIT) {
+        BeginDrawing();
+        ClearBackground((Color){240, 240, 240, 255});
 
-  // Muros de ladrillo
-  Image wall = LoadImage(ASSETS_PATH "/map/brickWall.png");
-  ImageResize(&wall, TILE_SIZE, TILE_SIZE);
-  brickWall = LoadTextureFromImage(wall);
-  UnloadImage(wall);
+        screenWidth = GetScreenWidth();
+        screenHeight = GetScreenHeight();
 
-  // Arco por defecto
-  Image img = LoadImage(ASSETS_PATH "/player/arch.png");
-  ImageResize(&img, PLAYER_SIZE - 10, PLAYER_SIZE - 10);
-  Arch currentArch = {
-      0,
-      LoadTextureFromImage(img),
-  };
-  UnloadImage(img);
+        switch (state) {
+            case STATE_MENU:
+                DrawMenu(screenWidth/2, screenHeight/2);
+                UpdateMenu();
+                break;
+            case STATE_GAME:
+                if(player1.life > 0 && player2.life > 0){
+                   DrawMap();
+                    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyDown(KEY_A) || IsKeyDown(KEY_D)) UpdatePlayer(&player1, 1);
+                    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) UpdatePlayer(&player2, 2);
+                    DrawPlayer(&player1);
+                    DrawPlayer(&player2);
+                    DrawArch(&player1.currentArch, player1.position, player1.direction);
+                    DrawArch(&player2.currentArch, player2.position, player2.direction);
+                    if (IsKeyPressed(KEY_E)) Shoot(&player1.currentProjectile, player1.position, player1.direction);
+                    if (IsKeyPressed(KEY_ENTER)) Shoot(&player2.currentProjectile, player2.position, player2.direction);
+                    UpdateProjectile(); 
+                } else {
+                    DrawEndMenu(screenWidth/2, screenHeight/2);
+                    UpdateEndMenu();
+                }
+                if (IsKeyPressed(KEY_Q)) state = STATE_MENU;
+                break;
 
-  // Proyectil por defecto
-  Projectile currentProjectile = {(Vector2){0, 0}, (Vector2){0, 0}, 50.f, 400.f,
-                                  500.f};
-
-  Player player;
-  InitPlayer(&player, screenWidth / 2, screenHeight / 2, 200.f);
-
-  while (!WindowShouldClose() && state != STATE_EXIT) {
-    BeginDrawing();
-    ClearBackground((Color){249, 240, 240, 255});
-
-    // Tomar el tamaño de la ventana
-    screenWidth = GetScreenWidth();
-    screenHeight = GetScreenHeight();
-
-    switch (state) {
-    case STATE_MENU:
-      DrawMenu(screenWidth / 2, screenHeight / 2);
-      state = UpdateMenu();
-      break;
-    case STATE_GAME:
-      DrawMap();
-      UpdatePlayer(&player);
-      DrawPlayer(&player);
-      DrawArch(&currentArch, &player);
-      if (IsKeyPressed(KEY_Q))
-        state = STATE_MENU;
-      if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        Shoot(&currentProjectile, &player);
-      UpdateProjectile();
-      break;
-    case STATE_SETTINGS:
-      DrawSettings(screenWidth / 2, screenHeight / 2);
-      UpdateSettings();
-      state = BackToMenu();
-      if (IsKeyPressed(KEY_Q))
-        state = STATE_MENU;
-      break;
-    default:
-      break;
+            case STATE_SETTINGS:
+                DrawSettings(screenWidth/2, screenHeight/2);
+                UpdateSettings();
+                BackToMenu();
+                if (IsKeyPressed(KEY_Q)) state = STATE_MENU;
+                break;
+            default:
+                break;
+        }
+        EndDrawing();
     }
-    EndDrawing();
-  }
-
-  UnloadPlayer(&player);
-  CloseWindow();
-  return 0;
+    
+    UnloadPlayer(&player1);
+    UnloadPlayer(&player2);
+    CloseWindow();
+    return 0;
 }
