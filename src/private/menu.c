@@ -56,7 +56,7 @@ void UpdateMenu() {
       InitPlayer(&player1, (3 * TILE_SIZE) / 2, (3 * TILE_SIZE) / 2, 200.f, 1);
       InitPlayer(&player2, TILE_SIZE * (MAP_WIDTH - 1.5),
                  TILE_SIZE * (MAP_HEIGHT - 1.5), 200.f, 2);
-      state = STATE_GAME;
+      state = STATE_MINI_GAME;
       return;
     }
     if (CheckCollisionPointRec(mouse, menu_btnOptions)) {

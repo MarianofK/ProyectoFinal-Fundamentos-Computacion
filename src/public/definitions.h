@@ -8,14 +8,14 @@
 #define initialHeight 768
 
 /// @brief Enumeration para controlar la accion a realizar.
-/// | STATE_MENU | STATE_GAME| STATE_SETTINGS | STATE_EXIT |
+/// | STATE_MENU | STATE_GAME| STATE_MINI_GAME | STATE_SETTINGS | STATE_EXIT |
 typedef enum {
-    STATE_MENU,
-    STATE_GAME,
-    STATE_SETTINGS,
-    STATE_EXIT
+  STATE_MENU,
+  STATE_GAME,
+  STATE_MINI_GAME,
+  STATE_SETTINGS,
+  STATE_EXIT
 } GameState;
-
 
 /// @brief Estado del juego
 extern GameState state;
