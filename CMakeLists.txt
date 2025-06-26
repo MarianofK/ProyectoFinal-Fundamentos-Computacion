@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
 project(Battlearcher)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 # Hide the console window
 if (WIN32)
    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
