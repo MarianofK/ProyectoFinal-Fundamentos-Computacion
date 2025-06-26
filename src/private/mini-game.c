@@ -1,24 +1,26 @@
 #include "definitions.h"
 #include "raylib.h"
 
-#define PLAYER_SIZE 40
+#define MAX_FRAME_SPEED 15
+#define MIN_FRAME_SPEED 1
 
 int mini_game(int screenWidth, int screenHeight) {
 
-  Rectangle player1 = {200, 200, PLAYER_SIZE, PLAYER_SIZE};
-  Rectangle player2 = {250, 200, PLAYER_SIZE, PLAYER_SIZE};
+  Texture2D player1 = LoadTexture(ASSETS_PATH "player/scarfy.png");
+  Texture2D player2 = LoadTexture(ASSETS_PATH "player/scarfy.png");
 
-  Camera2D camera1 = {0};
-  camera1.target = (Vector2){player1.x, player1.y};
-  camera1.offset = (Vector2){200.0f, 200.0f};
-  camera1.rotation = 0.0f;
-  camera1.zoom = 1.0f;
+  Vector2 position_player1 = {350.0f, 280.0f};
+  Vector2 position_player2 = {350.0f, 280.0f};
 
-  Camera2D camera2 = {0};
-  camera2.target = (Vector2){player2.x, player2.y};
-  camera2.offset = (Vector2){200.0f, 200.0f};
-  camera2.rotation = 0.0f;
-  camera2.zoom = 1.0f;
+  Rectangle frameRecs_player1 = {0.0f, 0.0f, (float)player1.width / 6,
+                                 (float)player1.height};
+  Rectangle frameRecs_player2 = {0.0f, 0.0f, (float)player2.width / 6,
+                                 (float)player2.height};
+
+  // Frames
+  int currentFrame = 0;
+  int framesCounter = 0;
+  int framesSpeed = 10; // Number of spritesheet frames shown by second
 
   RenderTexture screenCamera1 =
       LoadRenderTexture(screenWidth / 2, screenHeight);
@@ -36,98 +38,64 @@ int mini_game(int screenWidth, int screenHeight) {
   // Main game loop
   while (!IsKeyPressed(KEY_ESCAPE)) // Detect window close button or ESC key
   {
-    // Update
+    // Update players
+    framesCounter++;
+
+    if (framesCounter >= (60 / framesSpeed)) {
+      framesCounter = 0;
+      currentFrame++;
+
+      if (currentFrame > 5)
+        currentFrame = 0;
+
+      frameRecs_player1.x = (float)currentFrame * (float)player1.width / 6;
+      frameRecs_player2.x = (float)currentFrame * (float)player2.width / 6;
+    }
+
     //----------------------------------------------------------------------------------
-    if (IsKeyDown(KEY_S))
-      player1.y += 3.0f;
-    else if (IsKeyDown(KEY_W))
-      player1.y -= 3.0f;
-    if (IsKeyDown(KEY_D))
-      player1.x += 3.0f;
-    else if (IsKeyDown(KEY_A))
-      player1.x -= 3.0f;
-
-    if (IsKeyDown(KEY_UP))
-      player2.y -= 3.0f;
-    else if (IsKeyDown(KEY_DOWN))
-      player2.y += 3.0f;
-    if (IsKeyDown(KEY_RIGHT))
-      player2.x += 3.0f;
-    else if (IsKeyDown(KEY_LEFT))
-      player2.x -= 3.0f;
-
-    camera1.target = (Vector2){player1.x, player1.y};
-    camera2.target = (Vector2){player2.x, player2.y};
-    //----------------------------------------------------------------------------------
-
-    // Draw
+    // Draw player 1
     //----------------------------------------------------------------------------------
     BeginTextureMode(screenCamera1);
+
+    BeginDrawing();
+
     ClearBackground(RAYWHITE);
 
-    BeginMode2D(camera1);
+    DrawTextureRec(player1, frameRecs_player1, position_player1,
+                   WHITE); // Draw part of the texture
 
-    // Draw full scene with first camera
-    for (int i = 0; i < screenWidth / PLAYER_SIZE + 1; i++) {
-      DrawLineV((Vector2){(float)PLAYER_SIZE * i, 0},
-                (Vector2){(float)PLAYER_SIZE * i, (float)screenHeight},
-                LIGHTGRAY);
-    }
+    EndDrawing();
 
-    for (int i = 0; i < screenHeight / PLAYER_SIZE + 1; i++) {
-      DrawLineV((Vector2){0, (float)PLAYER_SIZE * i},
-                (Vector2){(float)screenWidth, (float)PLAYER_SIZE * i},
-                LIGHTGRAY);
-    }
-
-    for (int i = 0; i < screenWidth / PLAYER_SIZE; i++) {
-      for (int j = 0; j < screenHeight / PLAYER_SIZE; j++) {
-        DrawText(TextFormat("[%i,%i]", i, j), 10 + PLAYER_SIZE * i,
-                 15 + PLAYER_SIZE * j, 10, LIGHTGRAY);
-      }
-    }
-
-    DrawRectangleRec(player1, RED);
-    DrawRectangleRec(player2, BLUE);
-    EndMode2D();
-
-    DrawRectangle(0, 0, GetScreenWidth() / 2, 30, Fade(RAYWHITE, 0.6f));
-    DrawText("PLAYER1: W/S/A/D to move", 10, 10, 10, MAROON);
+    // Top part
+    DrawRectangle(0, 0, screenCamera1.texture.width, 100, Fade(RAYWHITE, 0.6f));
+    DrawRectangle(screenCamera1.texture.width / 2, 10, 80, 80, Fade(RED, 0.6f));
+    DrawRectangle((screenCamera1.texture.width / 2) + 10, 20, 60, 60,
+                  Fade(WHITE, 100));
 
     EndTextureMode();
 
+    // END player 1
+
+    //----------------------------------------------------------------------------------
+    // Draw player 2
+    //----------------------------------------------------------------------------------
+
     BeginTextureMode(screenCamera2);
+
+    BeginDrawing();
+
     ClearBackground(RAYWHITE);
 
-    BeginMode2D(camera2);
+    DrawTextureRec(player2, frameRecs_player2, position_player2,
+                   WHITE); // Draw part of the texture
 
-    // Draw full scene with second camera
-    for (int i = 0; i < screenWidth / PLAYER_SIZE + 1; i++) {
-      DrawLineV((Vector2){(float)PLAYER_SIZE * i, 0},
-                (Vector2){(float)PLAYER_SIZE * i, (float)screenHeight},
-                LIGHTGRAY);
-    }
+    EndDrawing();
 
-    for (int i = 0; i < screenHeight / PLAYER_SIZE + 1; i++) {
-      DrawLineV((Vector2){0, (float)PLAYER_SIZE * i},
-                (Vector2){(float)screenWidth, (float)PLAYER_SIZE * i},
-                LIGHTGRAY);
-    }
-
-    for (int i = 0; i < screenWidth / PLAYER_SIZE; i++) {
-      for (int j = 0; j < screenHeight / PLAYER_SIZE; j++) {
-        DrawText(TextFormat("[%i,%i]", i, j), 10 + PLAYER_SIZE * i,
-                 15 + PLAYER_SIZE * j, 10, LIGHTGRAY);
-      }
-    }
-
-    DrawRectangleRec(player1, RED);
-    DrawRectangleRec(player2, BLUE);
-
-    EndMode2D();
-
-    DrawRectangle(0, 0, GetScreenWidth() / 2, 30, Fade(RAYWHITE, 0.6f));
-    DrawText("PLAYER2: UP/DOWN/LEFT/RIGHT to move", 10, 10, 10, DARKBLUE);
+    // Top part
+    DrawRectangle(0, 0, screenCamera2.texture.width, 100, Fade(RAYWHITE, 0.6f));
+    DrawRectangle(screenCamera2.texture.width / 2, 10, 80, 80, Fade(RED, 0.6f));
+    DrawRectangle((screenCamera2.texture.width / 2) + 10, 20, 60, 60,
+                  Fade(WHITE, 100));
 
     EndTextureMode();
 
@@ -148,6 +116,8 @@ int mini_game(int screenWidth, int screenHeight) {
   //--------------------------------------------------------------------------------------
   UnloadRenderTexture(screenCamera1); // Unload render texture
   UnloadRenderTexture(screenCamera2); // Unload render texture
+  UnloadTexture(player1);
+  UnloadTexture(player2);
   state = STATE_GAME;
   return 0;
 }
