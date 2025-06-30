@@ -6,6 +6,8 @@
 //----------------------------------------------------------------------------------
 #define NUM_SHOOTS 50
 #define NUM_MAX_ENEMIES 50
+#define SHOOT_X_SIZE 60
+#define SHOOT_Y_SIZE 40
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
@@ -14,7 +16,7 @@
 typedef struct Player {
   Rectangle rec;
   Vector2 speed;
-  Color color;
+  Texture texture_image;
   bool isFirst;
   int score;
   int num;
@@ -32,6 +34,7 @@ typedef struct Shoot {
   Vector2 speed;
   bool active;
   Color color;
+  Texture texture_image;
 } Shoot;
 
 //------------------------------------------------------------------------------------
@@ -58,6 +61,7 @@ static void UpdateDrawFrame(Player *, Enemy *); // Update and Draw (one frame)
 // Mini game entry point
 //------------------------------------------------------------------------------------
 int mini_game(void) {
+
   // Player declaration
   Player player_1 = {0};
   Player player_2 = {0};
@@ -66,9 +70,21 @@ int mini_game(void) {
   Enemy enemy_p1[NUM_MAX_ENEMIES] = {0};
   Enemy enemy_p2[NUM_MAX_ENEMIES] = {0};
 
-  // Player colors (textures)
-  player_1.color = BLACK;
-  player_2.color = MAGENTA;
+  // Player size
+  player_1.rec.width = 100;
+  player_1.rec.height = 100;
+
+  player_2.rec.width = 100;
+  player_2.rec.height = 100;
+
+  // Player textures
+  Image img_p1 = LoadImage(ASSETS_PATH "/player/arquero_p1.png");
+  ImageResize(&img_p1, player_1.rec.width, player_1.rec.height);
+  player_1.texture_image = LoadTextureFromImage(img_p1);
+
+  Image img_p2 = LoadImage(ASSETS_PATH "/player/arquero_p2.png");
+  ImageResize(&img_p2, player_2.rec.width, player_2.rec.height);
+  player_2.texture_image = LoadTextureFromImage(img_p2);
 
   // Player numbers
   player_1.num = 1;
@@ -95,7 +111,8 @@ int mini_game(void) {
   score_player2 += player_2.score;
 
   // De-Initialization
-  UnloadGame(); // Unload loaded data (textures, sounds, models...)
+  UnloadImage(img_p1);
+  UnloadImage(img_p2);
   state = STATE_ARCH_SELECTION;
 
   return 0;
@@ -114,8 +131,6 @@ void InitGame(Player *player, Enemy *enemy) {
   // Initialize player
   player->rec.x = 20;
   player->rec.y = (float)screenHeight / 2;
-  player->rec.width = 20;
-  player->rec.height = 20;
   player->speed.x = 5;
   player->speed.y = 5;
   player->isFirst = true;
@@ -134,17 +149,21 @@ void InitGame(Player *player, Enemy *enemy) {
     enemy[i].color = GRAY;
   }
 
+  // Shoot textures
+  Image img_shoot = LoadImage(ASSETS_PATH "/player/flechita.png");
+  ImageResize(&img_shoot, SHOOT_X_SIZE, SHOOT_Y_SIZE);
   // Initialize shoots
   for (int i = 0; i < NUM_SHOOTS; i++) {
     // Player
     shoot[i].rec.x = player->rec.x;
-    shoot[i].rec.y = player->rec.y + player->rec.height / 4;
+    shoot[i].rec.y = player->rec.y + (player->rec.height / 4);
     shoot[i].rec.width = 10;
     shoot[i].rec.height = 5;
     shoot[i].speed.x = 7;
     shoot[i].speed.y = 0;
     shoot[i].active = false;
     shoot[i].color = MAROON;
+    shoot[i].texture_image = LoadTextureFromImage(img_shoot);
   }
 }
 
@@ -195,7 +214,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
     // Shoot initialization for player
     if (IsKeyPressed(KEY_SPACE) && times_shoot < NUM_SHOOTS) {
       shoot[times_shoot].rec.x = player->rec.x;
-      shoot[times_shoot].rec.y = player->rec.y + player->rec.height / 4;
+      shoot[times_shoot].rec.y = player->rec.y + (player->rec.height / 4);
       shoot[times_shoot].active = true;
       times_shoot++;
     }
@@ -240,7 +259,7 @@ void DrawGame(Player *player, Enemy *enemy) {
   ClearBackground(RAYWHITE);
 
   if (!gameOver && activeEnemies > 0) {
-    DrawRectangleRec(player->rec, player->color);
+    DrawTexture(player->texture_image, player->rec.x, player->rec.y, WHITE);
 
     for (int i = 0; i < NUM_MAX_ENEMIES; i++) {
       if (enemy[i].active)
@@ -249,7 +268,8 @@ void DrawGame(Player *player, Enemy *enemy) {
 
     for (int i = 0; i < NUM_SHOOTS; i++) {
       if (shoot[i].active)
-        DrawRectangleRec(shoot[i].rec, shoot[i].color);
+        DrawTexture(shoot[i].texture_image, shoot[i].rec.x, shoot[i].rec.y,
+                    WHITE);
     }
 
     // Player max distance
@@ -289,11 +309,6 @@ void DrawGame(Player *player, Enemy *enemy) {
     }
   }
   EndDrawing();
-}
-
-// Unload game variables
-void UnloadGame(void) {
-  // TODO: Unload all dynamic loaded data (textures, sounds, models...)
 }
 
 // Update and Draw (one frame)
