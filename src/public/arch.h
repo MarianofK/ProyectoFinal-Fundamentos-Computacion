@@ -22,6 +22,7 @@ typedef struct Arch {
     int damage;
     int cost;
     Texture2D texture;
+    Texture2D arch;
     struct Arch *previous;
     struct Arch *next;
 } Arch;

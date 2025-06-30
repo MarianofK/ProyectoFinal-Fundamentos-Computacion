@@ -4,7 +4,7 @@
 void InitializeWindow(){
     screenHeight = initialHeight;
     screenWidth = initialWidth;
-    InitWindow(initialWidth, initialHeight, "The Archer"); // To-Do: cambiar nombre
+    InitWindow(initialWidth, initialHeight, "Battlearcher"); // To-Do: cambiar nombre
     SetTargetFPS(60);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 };

@@ -34,14 +34,14 @@ int main(void) {
       switch (selection) {
       case SELECTION_PLAYER_1:
         DrawText("Jugador 1", screenWidth / 2 - 50,
-                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
+                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 20, BLACK);
         DrawSelectionArch(screenWidth / 2,
                           screenHeight / 2 - ARCH_CARD_HEIGHT / 2,
                           player1.playerNumber);
         break;
       case SELECTION_PLAYER_2:
         DrawText("Jugador 2", screenWidth / 2 - 50,
-                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
+                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 20, BLACK);
         DrawSelectionArch(screenWidth / 2,
                           screenHeight / 2 - ARCH_CARD_HEIGHT / 2,
                           player2.playerNumber);
@@ -56,6 +56,14 @@ int main(void) {
       break;
     case STATE_GAME:
       if (player1.life > 0 && player2.life > 0) {
+        if(player1.currentArch != NULL && &player1.currentProjectile != NULL){
+          player1.currentProjectile.damage = player1.currentArch->damage;
+          player1.currentProjectile.range = player1.currentArch->cadence;
+        }
+        if(player2.currentArch != NULL && &player2.currentProjectile != NULL){
+          player2.currentProjectile.damage = player2.currentArch->damage;
+          player2.currentProjectile.range = player2.currentArch->cadence;
+        }
         DrawMap();
         if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyDown(KEY_A) ||
             IsKeyDown(KEY_D))
@@ -125,6 +133,6 @@ int main(void) {
   FreeArchTree(arch2);
   FreeArchTree(arch3);
   CloseWindow();
-  
+
   return 0;
 }

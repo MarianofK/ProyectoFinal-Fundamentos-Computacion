@@ -10,7 +10,7 @@ Rectangle btnMainMenu = {0, 0, rectangleWidth, rectangleHeight};
 
 void DrawMenu(int x, int y) {
 
-  DrawText("The Archer", x - (rectangleWidth / 2 - 7.5), y - 130, 30, BLACK);
+  DrawText("Battlearcher", x - (rectangleWidth / 2 - 7.5), y - 130, 30, BLACK);
 
   btnPlay.x = x - rectangleWidth / 2;
   btnPlay.y = y - 60;

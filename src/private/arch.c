@@ -20,26 +20,16 @@ void InitArchs() {
     arch1 = LoadArchTreeFromCSV(ASSETS_PATH "/data/arch_tree1.csv");
     arch2 = LoadArchTreeFromCSV(ASSETS_PATH "/data/arch_tree2.csv");
     arch3 = LoadArchTreeFromCSV(ASSETS_PATH "/data/arch_tree3.csv");
-
-    if (arch1) printf("ARCH 1 root: %d - %s\n", arch1->index, arch1->name);
-    else printf("ARCH 1 cargó NULL\n");
-
-    if (arch2) printf("ARCH 2 root: %d - %s\n", arch2->index, arch2->name);
-    else printf("ARCH 2 cargó NULL\n");
-
-    if (arch3) printf("ARCH 3 root: %d - %s\n", arch3->index, arch3->name);
-    else printf("ARCH 3 cargó NULL\n");
 }
-
 
 void DrawArch(Arch *arch, Vector2 playerPosition, Vector2 playerDirection) {
     float angle = atan2f(playerDirection.y, playerDirection.x) * RAD2DEG;
 
-    DrawTexturePro(arch->texture,
-        (Rectangle){0, 0, arch->texture.width, arch->texture.height},
+    DrawTexturePro(arch->arch,
+        (Rectangle){0, 0, arch->arch.width, arch->arch.height},
         (Rectangle){playerPosition.x, playerPosition.y + 10,
-                    arch->texture.width, arch->texture.height},
-        (Vector2){arch->texture.width / 2, arch->texture.height / 2},
+                    arch->arch.width, arch->arch.height},
+        (Vector2){arch->arch.width / 2, arch->arch.height / 2},
         angle, WHITE);
 }
 
@@ -138,52 +128,81 @@ void DrawArchsToUpgrade(int x, int y, int playerNumber) {
 
     switch (playerNumber) {
     case 1:
-    if (player1.currentArch) {
-        if (player1.currentArch->previous) {
-            DrawTexture(player1.currentArch->previous->texture, card1.x, card1.y, WHITE);
-            DrawText(player1.currentArch->previous->name, card1.x + 35,
-                     card1.y + ARCH_CARD_HEIGHT - 30, 20, BLACK);
-            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
-                CheckCollisionPointRec(mouse, card1)) {
-                player1.currentArch = player1.currentArch->previous;
+        if (player1.currentArch != NULL) {
+            if (player1.currentArch->previous != NULL) {
+                DrawTexture(player1.currentArch->previous->texture, card1.x, card1.y, WHITE);
+                int fontSize = 20;
+                const char *text = player1.currentArch->previous->name;
+                int textWidth = MeasureText(text, fontSize);
+                float textX = card1.x + (card1.width - textWidth) / 2.0f;
+                float textY = card1.y + ARCH_CARD_HEIGHT - 30;
+                DrawText(text, textX, textY, fontSize, BLACK);
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+                    CheckCollisionPointRec(mouse, card1)) {
+                    player1.currentArch = player1.currentArch->previous;
+                    selection = SELECTION_PLAYER_2;
+                }
+            } else {
                 selection = SELECTION_PLAYER_2;
             }
-        }
 
-        if (player1.currentArch->next) {
-            DrawTexture(player1.currentArch->next->texture, card2.x, card2.y, WHITE);
-            DrawText(player1.currentArch->next->name, card2.x + 35,
-                     card2.y + ARCH_CARD_HEIGHT - 30, 20, BLACK);
-            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
-                CheckCollisionPointRec(mouse, card2)) {
-                player1.currentArch = player1.currentArch->next;
+            if (player1.currentArch->next != NULL) {
+                DrawTexture(player1.currentArch->next->texture, card2.x, card2.y, WHITE);
+                int fontSize = 20;
+                const char *text = player1.currentArch->next->name;
+                int textWidth = MeasureText(text, fontSize);
+                float textX = card2.x + (card2.width - textWidth) / 2.0f;
+                float textY = card2.y + ARCH_CARD_HEIGHT - 30;
+                DrawText(text, textX, textY, fontSize, BLACK);
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+                    CheckCollisionPointRec(mouse, card2)) {
+                    player1.currentArch = player1.currentArch->next;
+                    selection = SELECTION_PLAYER_2;
+                }
+            } else {
                 selection = SELECTION_PLAYER_2;
             }
+        } else {
+            selection = SELECTION_PLAYER_2;
         }
-    } else {
-        selection = SELECTION_PLAYER_2;
-    }
     break;
 
     case 2:
-        if (player2.currentArch && player2.currentArch->previous && player2.currentArch->next) {
-            
-            DrawTexture(player2.currentArch->previous->texture, card1.x, card1.y, WHITE);
-            DrawText(player2.currentArch->previous->name, card1.x + 35,
-                     card1.y + ARCH_CARD_HEIGHT - 30, 20, BLACK);
-            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
-                CheckCollisionPointRec(mouse, card1)) {
-                player2.currentArch = player2.currentArch->previous;
+        if (player2.currentArch != NULL) {
+            if (player2.currentArch->previous != NULL) {
+                DrawTexture(player2.currentArch->previous->texture, card1.x, card1.y, WHITE);
+                int fontSize = 20;
+                const char *text = player2.currentArch->previous->name;
+                int textWidth = MeasureText(text, fontSize);
+                float textX = card1.x + (card1.width - textWidth) / 2.0f;
+                float textY = card1.y + ARCH_CARD_HEIGHT - 30;
+                DrawText(text, textX, textY, fontSize, BLACK);
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+                    CheckCollisionPointRec(mouse, card1)) {
+                    player2.currentArch = player2.currentArch->previous;
+                    state = STATE_GAME;
+                    selection = SELECTION_PLAYER_1;
+                }
+            } else {
                 state = STATE_GAME;
                 selection = SELECTION_PLAYER_1;
             }
-            
-            DrawTexture(player2.currentArch->next->texture, card2.x, card2.y, WHITE);
-            DrawText(player2.currentArch->next->name, card2.x + 35,
-                     card2.y + ARCH_CARD_HEIGHT - 30, 20, BLACK);
-            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
-                CheckCollisionPointRec(mouse, card2)) {
-                player2.currentArch = player2.currentArch->next;
+
+            if (player2.currentArch->next != NULL) {
+                DrawTexture(player2.currentArch->next->texture, card2.x, card2.y, WHITE);
+                int fontSize = 20;
+                const char *text = player2.currentArch->next->name;
+                int textWidth = MeasureText(text, fontSize);
+                float textX = card2.x + (card2.width - textWidth) / 2.0f;
+                float textY = card2.y + ARCH_CARD_HEIGHT - 30;
+                DrawText(text, textX, textY, fontSize, BLACK);
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+                    CheckCollisionPointRec(mouse, card2)) {
+                    player2.currentArch = player2.currentArch->next;
+                    state = STATE_GAME;
+                    selection = SELECTION_PLAYER_1;
+                }
+            } else {
                 state = STATE_GAME;
                 selection = SELECTION_PLAYER_1;
             }
@@ -246,10 +265,11 @@ Arch *LoadArchTreeFromCSV(const char *filename) {
 
         char nameBuffer[64] = {0};
         char textureFile[128] = {0};
+        char archFile[128] = {0};
 
-        int matched = sscanf(line, "%d,%63[^,],%f,%d,%d,%127[^,\n]", &arch->index, nameBuffer, &arch->cadence, &arch->damage, &arch->cost, textureFile);
+        int matched = sscanf(line, "%d,%63[^,],%f,%d,%d,%127[^,],%127[^,\n]", &arch->index, nameBuffer, &arch->cadence, &arch->damage, &arch->cost, textureFile, archFile);
 
-        if (matched != 6) {
+        if (matched != 7) {
             printf("Error parseando línea: %s\n", line);
             free(arch);
             continue;
@@ -264,13 +284,21 @@ Arch *LoadArchTreeFromCSV(const char *filename) {
 
         // Cargar textura
         Image img = LoadImage(TextFormat(ASSETS_PATH "%s", textureFile));
-        ImageResize(&img, PLAYER_SIZE, PLAYER_SIZE);
+        ImageResize(&img, 150, 150);
         arch->texture = LoadTextureFromImage(img);
         UnloadImage(img);
+
+        Image img2 = LoadImage(TextFormat(ASSETS_PATH "%s", archFile));
+        ImageResize(&img2, PLAYER_SIZE, PLAYER_SIZE);
+        arch->arch = LoadTextureFromImage(img2);
+        UnloadImage(img2);
 
         printf("Insertando nodo %d - %s\n", arch->index, arch->name);
         root = InsertArchNodeInOrder(root, arch);
         count++;
+
+        arch->previous = NULL;
+        arch->next = NULL;
     }
 
     fclose(file);
