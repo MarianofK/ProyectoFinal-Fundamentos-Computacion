@@ -1,0 +1,8 @@
+﻿Index,Name,Cadence,Damage,Cost,TextureRoute
+4,Veneno,1,20,200,/textures/veneno.png
+2,+ Daño,1,20,200,/player/arch.png
+6,+ Cadencia,1,20,200,/player/arch.png
+1,++ Daño,1,20,200,/player/arch.png
+3,++ Cadencia,1,20,200,/player/arch.png
+5,+++ Daño,1,20,200,/player/arch.png
+7,+++ Cadencia,1,20,200,/player/arch.png

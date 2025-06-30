@@ -68,7 +68,7 @@ int mini_game(void) {
 
   // Player colors (textures)
   player_1.color = BLACK;
-  player_2.color = MAGENTA;
+  player_2.color = BLACK;
 
   // Player numbers
   player_1.num = 1;
@@ -114,8 +114,8 @@ void InitGame(Player *player, Enemy *enemy) {
   // Initialize player
   player->rec.x = 20;
   player->rec.y = (float)screenHeight / 2;
-  player->rec.width = 20;
-  player->rec.height = 20;
+  player->rec.width = 25;
+  player->rec.height = 25;
   player->speed.x = 5;
   player->speed.y = 5;
   player->isFirst = true;
@@ -144,7 +144,7 @@ void InitGame(Player *player, Enemy *enemy) {
     shoot[i].speed.x = 7;
     shoot[i].speed.y = 0;
     shoot[i].active = false;
-    shoot[i].color = MAROON;
+    shoot[i].color = RED;
   }
 }
 
@@ -183,8 +183,8 @@ void UpdateGame(Player *player, Enemy *enemy) {
     }
 
     // Wall behaviour vs Player
-    if (player->rec.x >= MeasureText("player number:", 40))
-      player->rec.x = MeasureText("player number:", 40);
+    if (player->rec.x >= MeasureText("Jugador:", 40))
+      player->rec.x = MeasureText("Jugador:", 40);
     if (player->rec.x + player->rec.width >= screenWidth)
       player->rec.x = screenWidth - player->rec.width;
     if (player->rec.y <= 120)
@@ -237,7 +237,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
 void DrawGame(Player *player, Enemy *enemy) {
   BeginDrawing();
 
-  ClearBackground(RAYWHITE);
+  ClearBackground((Color){240, 240, 240, 255});
 
   if (!gameOver && activeEnemies > 0) {
     DrawRectangleRec(player->rec, player->color);
@@ -253,22 +253,22 @@ void DrawGame(Player *player, Enemy *enemy) {
     }
 
     // Player max distance
-    DrawRectangle(MeasureText("player number:", 40) + player->rec.width, 120, 5,
+    DrawRectangle(MeasureText("Jugador:", 40) + player->rec.width, 120, 5,
                   screenHeight - 120, BLACK);
 
     // Status box
-    DrawRectangle(0, 0, screenWidth, 120, GREEN);
-    DrawText(TextFormat("%04i", player->score), 20, 20, 40, GRAY);
-    DrawText(TextFormat("player number: %i", player->num), 20, 60, 40, GRAY);
-    DrawText(TextFormat("targets left: %i", activeEnemies),
-             screenWidth - MeasureText("targets left: %i", 40) - 50, 20, 40,
-             GRAY);
-    DrawText(TextFormat("arrows left: %i", NUM_SHOOTS - times_shoot),
-             screenWidth - MeasureText("arrows left: %i", 40) - 50, 60, 40,
-             GRAY);
+    DrawRectangle(0, 0, screenWidth, 120, LIGHTGRAY);
+    DrawText(TextFormat("%04i", player->score), 20, 20, 40, BLACK);
+    DrawText(TextFormat("Jugador: %i", player->num), 20, 60, 40, BLACK);
+    DrawText(TextFormat("Enemigos: %i", activeEnemies),
+             screenWidth - MeasureText("Enemigos: %i", 40) - 50, 20, 40,
+             BLACK);
+    DrawText(TextFormat("Municion: %i", NUM_SHOOTS - times_shoot),
+             screenWidth - MeasureText("Enemigos: %i", 40) - 50, 60, 40,
+             BLACK);
 
     if (victory)
-      DrawText("YOU WIN", screenWidth / 2 - MeasureText("YOU WIN", 40) / 2,
+      DrawText("Ganaste", screenWidth / 2 - MeasureText("Ganaste", 40) / 2,
                screenHeight / 2 - 40, 40, BLACK);
   } else {
     if (player->num == 1) {
@@ -277,7 +277,7 @@ void DrawGame(Player *player, Enemy *enemy) {
           GetScreenWidth() / 2 -
               MeasureText("TERMINO TU TURNO, JUGADOR 2 PRESIONA [ENTER]", 20) /
                   2,
-          GetScreenHeight() / 2 - 50, 20, GRAY);
+          GetScreenHeight() / 2 - 50, 20, BLACK);
 
     } else if (player->num == 2) {
       DrawText("TERMINO TU TURNO, PRESIONA [ENTER] PARA TERMINAR",
@@ -285,7 +285,7 @@ void DrawGame(Player *player, Enemy *enemy) {
                    MeasureText(
                        "TERMINO TU TURNO, PRESIONA [ENTER] PARA TERMINAR", 20) /
                        2,
-               GetScreenHeight() / 2 - 50, 20, GRAY);
+               GetScreenHeight() / 2 - 50, 20, BLACK);
     }
   }
   EndDrawing();

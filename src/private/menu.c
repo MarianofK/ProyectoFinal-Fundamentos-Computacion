@@ -54,6 +54,7 @@ void UpdateMenu() {
   Vector2 mouse = GetMousePosition();
   if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
     if (CheckCollisionPointRec(mouse, btnPlay)) {
+      bSelected = false;
       InitPlayer(&player1, (3 * TILE_SIZE) / 2, (3 * TILE_SIZE) / 2, 200.f, 1);
       InitPlayer(&player2, TILE_SIZE * (MAP_WIDTH - 1.5),
                  TILE_SIZE * (MAP_HEIGHT - 1.5), 200.f, 2);

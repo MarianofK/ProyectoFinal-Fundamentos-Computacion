@@ -19,8 +19,10 @@ void InitPlayer(Player *player, float x, float y, float speed,
   player->texture = LoadTextureFromImage(img);
   UnloadImage(img);
 
-  player->currentArch = NULL;
   player->currentProjectile = *projectiles;
+  if(player->currentArch != NULL){
+    player->currentProjectile.damage = player->currentArch->damage;
+  }
 }
 
 void DrawPlayer(Player *player) {
@@ -28,10 +30,10 @@ void DrawPlayer(Player *player) {
                (Vector2){player->position.x - player->texture.width / 2,
                          player->position.y - player->texture.height / 2},
                WHITE);
-  DrawText(TextFormat("Player 1: %.1f", player1.life), 900, 30, 20, BLACK);
-  DrawText(TextFormat("Score Player 1: %i", score_player1), 900, 60, 20, BLACK);
-  DrawText(TextFormat("Player 2: %.1f", player2.life), 900, 90, 20, BLACK);
-  DrawText(TextFormat("Score Player 2: %i", score_player2), 900, 120, 20,
+  DrawText(TextFormat("Jugador 1: %.1f", player1.life), 900, 30, 20, BLACK);
+  DrawText(TextFormat("Puntuacion 1: %i", score_player1), 900, 60, 20, BLACK);
+  DrawText(TextFormat("Jugador 2: %.1f", player2.life), 900, 90, 20, BLACK);
+  DrawText(TextFormat("Puntuacion 2: %i", score_player2), 900, 120, 20,
            BLACK);
 }
 

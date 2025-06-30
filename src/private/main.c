@@ -121,6 +121,10 @@ int main(void) {
   EndDrawing();
   UnloadPlayer(&player1);
   UnloadPlayer(&player2);
+  FreeArchTree(arch1);
+  FreeArchTree(arch2);
+  FreeArchTree(arch3);
   CloseWindow();
+  
   return 0;
 }
