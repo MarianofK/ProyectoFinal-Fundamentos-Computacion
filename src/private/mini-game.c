@@ -6,14 +6,10 @@
 //----------------------------------------------------------------------------------
 #define NUM_SHOOTS 50
 #define NUM_MAX_ENEMIES 50
-#define FIRST_WAVE 10
-#define SECOND_WAVE 20
-#define THIRD_WAVE 50
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
 //----------------------------------------------------------------------------------
-typedef enum { FIRST = 0, SECOND, THIRD } EnemyWave;
 
 typedef struct Player {
   Rectangle rec;
@@ -45,10 +41,8 @@ static bool gameOver = false;
 static bool victory = false;
 
 static Shoot shoot[NUM_SHOOTS] = {0};
-static EnemyWave wave = {0};
 
 static int shootRate = 0;
-static float alpha = 0.0f;
 
 static int activeEnemies = 0;
 static int enemiesKill = 0;
@@ -113,12 +107,8 @@ int mini_game(void) {
 void InitGame(Player *player, Enemy *enemy) {
   // Initialize game variables
   shootRate = 0;
-  victory = false;
-  smooth = false;
-  wave = FIRST;
-  activeEnemies = FIRST_WAVE;
+  activeEnemies = NUM_MAX_ENEMIES;
   enemiesKill = 0;
-  alpha = 0;
 
   // Initialize player
   player->rec.x = 20;
@@ -159,105 +149,36 @@ void InitGame(Player *player, Enemy *enemy) {
 // Update game (one frame)
 void UpdateGame(Player *player, Enemy *enemy) {
   if (!gameOver) {
-    switch (wave) {
-    case FIRST: {
-      if (!smooth) {
-        alpha += 0.02f;
-
-        if (alpha >= 1.0f)
-          smooth = true;
-      }
-
-      if (smooth)
-        alpha -= 0.02f;
-
-      if (enemiesKill == activeEnemies) {
-        enemiesKill = 0;
-
-        for (int i = 0; i < activeEnemies; i++) {
-          if (!enemy[i].active)
-            enemy[i].active = true;
-        }
-
-        activeEnemies = SECOND_WAVE;
-        wave = SECOND;
-        smooth = false;
-        alpha = 0.0f;
-      }
-    } break;
-    case SECOND: {
-      if (!smooth) {
-        alpha += 0.02f;
-
-        if (alpha >= 1.0f)
-          smooth = true;
-      }
-
-      if (smooth)
-        alpha -= 0.02f;
-
-      if (enemiesKill == activeEnemies) {
-        enemiesKill = 0;
-
-        for (int i = 0; i < activeEnemies; i++) {
-          if (!enemy[i].active)
-            enemy[i].active = true;
-        }
-
-        activeEnemies = THIRD_WAVE;
-        wave = THIRD;
-        smooth = false;
-        alpha = 0.0f;
-      }
-    } break;
-    case THIRD: {
-      if (!smooth) {
-        alpha += 0.02f;
-
-        if (alpha >= 1.0f)
-          smooth = true;
-      }
-
-      if (smooth)
-        alpha -= 0.02f;
-
-      if (enemiesKill == activeEnemies)
-        victory = true;
-
-    } break;
-    }
-
     // Player movement
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_D))
       player->rec.x += player->speed.x;
-    if (IsKeyDown(KEY_LEFT))
+    if (IsKeyDown(KEY_A))
       player->rec.x -= player->speed.x;
-    if (IsKeyDown(KEY_UP))
+    if (IsKeyDown(KEY_W))
       player->rec.y -= player->speed.y;
-    if (IsKeyDown(KEY_DOWN))
+    if (IsKeyDown(KEY_S))
       player->rec.y += player->speed.y;
 
     // Player collision with enemy
-    for (int i = 0; i < activeEnemies; i++) {
+    for (int i = 0; i < NUM_MAX_ENEMIES; i++) {
       if (CheckCollisionRecs(player->rec, enemy[i].rec)) {
         gameOver = true;
+        // TODO handle shots maybe here
       }
     }
 
     // Enemy behaviour
-    for (int i = 0; i < activeEnemies; i++) {
+    for (int i = 0; i < NUM_MAX_ENEMIES; i++) {
       if (enemy[i].active) {
         enemy[i].rec.x -= enemy[i].speed.x;
 
         if (enemy[i].rec.x < 0) {
-          enemy[i].rec.x = GetRandomValue(screenWidth, screenWidth + 1000);
-          enemy[i].rec.y =
-              GetRandomValue(0, screenHeight - enemy[i].rec.height);
+          enemy[i].active = false;
         }
       }
     }
 
-    // Wall behaviour vs Player 1
+    // Wall behaviour vs Player
     if (player->rec.x <= 0)
       player->rec.x = 0;
     if (player->rec.x + player->rec.width >= screenWidth)
@@ -267,7 +188,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
     if (player->rec.y + player->rec.height >= screenHeight)
       player->rec.y = screenHeight - player->rec.height;
 
-    // Shoot initialization for player 1
+    // Shoot initialization for player
     if (IsKeyDown(KEY_SPACE)) {
       shootRate += 5;
 
@@ -288,13 +209,11 @@ void UpdateGame(Player *player, Enemy *enemy) {
         shoot[i].rec.x += shoot[i].speed.x;
 
         // Collision with enemy
-        for (int j = 0; j < activeEnemies; j++) {
+        for (int j = 0; j < NUM_MAX_ENEMIES; j++) {
           if (enemy[j].active) {
             if (CheckCollisionRecs(shoot[i].rec, enemy[j].rec)) {
               shoot[i].active = false;
-              enemy[j].rec.x = GetRandomValue(screenWidth, screenWidth + 1000);
-              enemy[j].rec.y =
-                  GetRandomValue(0, screenHeight - enemy[j].rec.height);
+              enemy[j].active = false;
               shootRate = 0;
               enemiesKill++;
               player->score += 100;
@@ -325,20 +244,7 @@ void DrawGame(Player *player, Enemy *enemy) {
   if (!gameOver) {
     DrawRectangleRec(player->rec, player->color);
 
-    if (wave == FIRST)
-      DrawText("FIRST WAVE",
-               screenWidth / 2 - MeasureText("FIRST WAVE", 40) / 2,
-               screenHeight / 2 - 40, 40, Fade(BLACK, alpha));
-    else if (wave == SECOND)
-      DrawText("SECOND WAVE",
-               screenWidth / 2 - MeasureText("SECOND WAVE", 40) / 2,
-               screenHeight / 2 - 40, 40, Fade(BLACK, alpha));
-    else if (wave == THIRD)
-      DrawText("THIRD WAVE",
-               screenWidth / 2 - MeasureText("THIRD WAVE", 40) / 2,
-               screenHeight / 2 - 40, 40, Fade(BLACK, alpha));
-
-    for (int i = 0; i < activeEnemies; i++) {
+    for (int i = 0; i < NUM_MAX_ENEMIES; i++) {
       if (enemy[i].active)
         DrawRectangleRec(enemy[i].rec, enemy[i].color);
     }
