@@ -43,4 +43,7 @@ void UpdateProjectile();
 /// @return Nueva direccion del proyectil
 Vector2 Reflection(Vector2 incident, Vector2 normal);
 
+/// @brief Limpia la lista de proyectiles en el nivel
+void ClearProjectiles();
+
 #endif
