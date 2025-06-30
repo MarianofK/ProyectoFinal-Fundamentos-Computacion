@@ -227,7 +227,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
     } break;
     }
 
-    // Player 1 movement
+    // Player movement
     if (IsKeyDown(KEY_RIGHT))
       player->rec.x += player->speed.x;
     if (IsKeyDown(KEY_LEFT))
@@ -237,7 +237,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
     if (IsKeyDown(KEY_DOWN))
       player->rec.y += player->speed.y;
 
-    // Player 1 collision with enemy
+    // Player collision with enemy
     for (int i = 0; i < activeEnemies; i++) {
       if (CheckCollisionRecs(player->rec, enemy[i].rec)) {
         gameOver = true;
