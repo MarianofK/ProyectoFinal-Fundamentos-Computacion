@@ -18,7 +18,7 @@ typedef struct Player {
     Vector2 direction;
     Texture2D texture;
     Projectile currentProjectile;
-    Arch currentArch;
+    Arch *currentArch;
 } Player;
 
 /// @brief Jugador 1

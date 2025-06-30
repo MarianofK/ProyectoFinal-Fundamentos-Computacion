@@ -17,7 +17,7 @@ void InitPlayer(Player* player, float x, float y, float speed, int playerNumber)
     player->texture = LoadTextureFromImage(img);
     UnloadImage(img);
 
-    player->currentArch = *archs;
+    player->currentArch = NULL;
     player->currentProjectile = *projectiles;
 }
 
