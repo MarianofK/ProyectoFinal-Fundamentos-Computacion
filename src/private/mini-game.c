@@ -126,7 +126,7 @@ void InitGame(Player *player, Enemy *enemy) {
     enemy[i].rec.width = 10;
     enemy[i].rec.height = 10;
     enemy[i].rec.x = GetRandomValue(screenWidth, screenWidth + 1000);
-    enemy[i].rec.y = GetRandomValue(screenHeight - enemy[i].rec.height - 120,
+    enemy[i].rec.y = GetRandomValue(enemy[i].rec.height - 120,
                                     screenHeight - enemy[i].rec.height);
     enemy[i].speed.x = 5;
     enemy[i].speed.y = 5;
