@@ -122,7 +122,7 @@ void InitGame(Player *player, Enemy *enemy) {
 
   // Initialize player
   player->rec.x = 20;
-  player->rec.y = 50;
+  player->rec.y = (float)screenHeight / 2;
   player->rec.width = 20;
   player->rec.height = 20;
   player->speed.x = 5;
