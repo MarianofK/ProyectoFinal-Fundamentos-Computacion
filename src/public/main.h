@@ -10,5 +10,6 @@
 #include "definitions.h"
 #include "projectile.h"
 #include "arch.h"
+#include "start_animation.h"
 
 #endif

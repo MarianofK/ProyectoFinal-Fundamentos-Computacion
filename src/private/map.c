@@ -5,7 +5,7 @@ Texture2D brickWall = {0};
 
 void InitMap(){
     Image wall = LoadImage(ASSETS_PATH "/map/brickWall.png");
-    ImageResize(&wall, TILE_SIZE, TILE_SIZE);
+    ImageResize(&wall, TILE_SIZE + 5, TILE_SIZE + 5);
     brickWall = LoadTextureFromImage(wall);
     UnloadImage(wall);
 }
@@ -13,7 +13,7 @@ void InitMap(){
 void DrawMap() {
     for (int y = 0; y < MAP_HEIGHT; y++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
-            map[y][x] == 1 ? DrawTextureV(brickWall, (Vector2){ x * TILE_SIZE, y * TILE_SIZE }, WHITE) : DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, LIGHTGRAY);
+            map[y][x] == 1 ? DrawTextureV(brickWall, (Vector2){ x * TILE_SIZE, y * TILE_SIZE}, WHITE) : DrawRectangle(x * TILE_SIZE + 5, y * TILE_SIZE + 5, TILE_SIZE - 5, TILE_SIZE - 5, LIGHTGRAY);
         }
     }
 }
@@ -47,10 +47,10 @@ Collision CheckCollisionWithMap(Vector2 direction, Vector2 *position, float offs
                 
                 // Rectángulo del tile sólido
                 Rectangle tileRect = {
-                    x * TILE_SIZE,
-                    y * TILE_SIZE,
-                    TILE_SIZE,
-                    TILE_SIZE
+                    (x * TILE_SIZE) - 1,
+                    (y * TILE_SIZE) - 1,
+                    TILE_SIZE + 1,
+                    TILE_SIZE + 1 
                 };
 
                 if (CheckCollisionRecs(nextRect, tileRect)) {
@@ -82,16 +82,16 @@ Collision CheckCollisionWithMap(Vector2 direction, Vector2 *position, float offs
 
             if(isProjectile){
                 Rectangle player1Rect = {
-                    player1.position.x - TILE_SIZE / 2,
-                    player1.position.y - TILE_SIZE / 2,
-                    TILE_SIZE,
-                    TILE_SIZE
+                    player1.position.x - PLAYER_SIZE / 2 + 10,
+                    player1.position.y - PLAYER_SIZE / 2 + 10,
+                    PLAYER_SIZE - 10,
+                    PLAYER_SIZE - 10
                 };
                 Rectangle player2Rect = {
-                    player2.position.x - TILE_SIZE / 2,
-                    player2.position.y - TILE_SIZE / 2,
-                    TILE_SIZE,
-                    TILE_SIZE
+                    player2.position.x - PLAYER_SIZE / 2 + 10,
+                    player2.position.y - PLAYER_SIZE / 2 + 10,
+                    PLAYER_SIZE - 10,
+                    PLAYER_SIZE - 10
                 };
                 if(CheckCollisionRecs(player1Rect, nextRect)){
                     result.withPlayer = true;
