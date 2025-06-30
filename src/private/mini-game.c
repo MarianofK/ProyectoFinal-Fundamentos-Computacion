@@ -41,12 +41,9 @@ static bool gameOver = false;
 static bool victory = false;
 
 static Shoot shoot[NUM_SHOOTS] = {0};
-
-static int shootRate = 0;
+static int times_shoot = 0;
 
 static int activeEnemies = 0;
-static int enemiesKill = 0;
-static bool smooth = false;
 
 //------------------------------------------------------------------------------------
 // Module Functions Declaration (local)
@@ -107,8 +104,7 @@ int mini_game(void) {
 // Initialize game variables
 void InitGame(Player *player, Enemy *enemy) {
   // Initialize game variables
-  shootRate = 0;
-  enemiesKill = 0;
+  times_shoot = 0;
   activeEnemies = NUM_MAX_ENEMIES;
 
   // Initialize player
@@ -193,17 +189,11 @@ void UpdateGame(Player *player, Enemy *enemy) {
       player->rec.y = screenHeight - player->rec.height;
 
     // Shoot initialization for player
-    if (IsKeyDown(KEY_SPACE)) {
-      shootRate += 5;
-
-      for (int i = 0; i < NUM_SHOOTS; i++) {
-        if (!shoot[i].active && shootRate % 20 == 0) {
-          shoot[i].rec.x = player->rec.x;
-          shoot[i].rec.y = player->rec.y + player->rec.height / 4;
-          shoot[i].active = true;
-          break;
-        }
-      }
+    if (IsKeyPressed(KEY_SPACE) && times_shoot < NUM_SHOOTS) {
+      shoot[times_shoot].rec.x = player->rec.x;
+      shoot[times_shoot].rec.y = player->rec.y + player->rec.height / 4;
+      shoot[times_shoot].active = true;
+      times_shoot++;
     }
 
     // Shoot logic
@@ -219,14 +209,11 @@ void UpdateGame(Player *player, Enemy *enemy) {
               shoot[i].active = false;
               enemy[j].active = false;
               activeEnemies--;
-              shootRate = 0;
-              enemiesKill++;
               player->score += 100;
             }
 
             if (shoot[i].rec.x + shoot[i].rec.width >= screenWidth) {
               shoot[i].active = false;
-              shootRate = 0;
             }
           }
         }
@@ -237,6 +224,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
       gameOver = false;
       player->isFirst = false;
       activeEnemies = NUM_MAX_ENEMIES;
+      times_shoot = 0;
     }
   }
 }
@@ -270,6 +258,9 @@ void DrawGame(Player *player, Enemy *enemy) {
     DrawText(TextFormat("player number: %i", player->num), 20, 60, 40, GRAY);
     DrawText(TextFormat("targets left: %i", activeEnemies),
              screenWidth - MeasureText("targets left: %i", 40) - 50, 20, 40,
+             GRAY);
+    DrawText(TextFormat("arrows left: %i", NUM_SHOOTS - times_shoot),
+             screenWidth - MeasureText("arrows left: %i", 40) - 50, 60, 40,
              GRAY);
 
     if (victory)
