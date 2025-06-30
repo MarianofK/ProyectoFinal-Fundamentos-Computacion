@@ -90,9 +90,13 @@ int mini_game(void) {
     // Update and Draw
     UpdateDrawFrame(&player_2, enemy_p2);
   }
+  // Update scores
+  score_player1 += player_1.score;
+  score_player2 += player_2.score;
+
   // De-Initialization
   UnloadGame(); // Unload loaded data (textures, sounds, models...)
-  state = STATE_GAME;
+  state = STATE_ARCH_SELECTION;
 
   return 0;
 }
