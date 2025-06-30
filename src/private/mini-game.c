@@ -262,8 +262,8 @@ void UpdateGame(Player *player, Enemy *enemy) {
       player->rec.x = 0;
     if (player->rec.x + player->rec.width >= screenWidth)
       player->rec.x = screenWidth - player->rec.width;
-    if (player->rec.y <= 0)
-      player->rec.y = 0;
+    if (player->rec.y <= 120)
+      player->rec.y = 120;
     if (player->rec.y + player->rec.height >= screenHeight)
       player->rec.y = screenHeight - player->rec.height;
 
@@ -348,6 +348,8 @@ void DrawGame(Player *player, Enemy *enemy) {
         DrawRectangleRec(shoot[i].rec, shoot[i].color);
     }
 
+    // Status box
+    DrawRectangle(0, 0, screenWidth, 120, GREEN);
     DrawText(TextFormat("%04i", player->score), 20, 20, 40, GRAY);
     DrawText(TextFormat("player number: %i", player->num), 20, 60, 40, GRAY);
 
