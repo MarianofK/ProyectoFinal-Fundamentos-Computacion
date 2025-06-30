@@ -28,7 +28,7 @@ Desde la etapa de planificación se propuso la creación de un videojuego, donde
 * Objetivos:
   * Se buscaba crear un juego 2D entretenido y corto, también comprender como se realiza la gestión de recursos y optimizaciones necesarias en sistemas con gráficos para que sea rápido y eficiente, utilizando las herramientas adquiridas durante el cursado de la materia.
 * Diagrama de bloques:
-  ![diagrama de bloques](src/assets/diagrama.png)
+  - ![diagrama de bloques](src/assets/diagrama.png)
 * Informacion intercambiada entre modulos:
   * Las variables o recursos requeridos en distintas partes del sistema están declaradas globalmente. Se utilizó una estructura modular, reutilizable y mantenible, la cual consiste en modularizar la declaración de funciones y variables en un archivo “.h” para luego realizar la implementación en archivos “.c”. De esta forma se puede accede a variables de otros archivos y modificarlas simplemente importando él “.h” especifico. Sin embargo, principalmente las estructuras de los personajes, arcos y funciones de colisiones con el mapa y jugadores son las que se modifican constantemente.
 * Funcionalidad de cada modulo:
