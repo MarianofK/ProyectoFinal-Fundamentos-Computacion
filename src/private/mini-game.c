@@ -87,6 +87,7 @@ int mini_game(void) {
     // Update and Draw
     UpdateDrawFrame(&player_1, enemy_p1);
   }
+
   // Second: player 2 till game end
   while (player_2.isFirst) {
     // Update and Draw
@@ -107,8 +108,8 @@ int mini_game(void) {
 void InitGame(Player *player, Enemy *enemy) {
   // Initialize game variables
   shootRate = 0;
-  activeEnemies = NUM_MAX_ENEMIES;
   enemiesKill = 0;
+  activeEnemies = NUM_MAX_ENEMIES;
 
   // Initialize player
   player->rec.x = 20;
@@ -148,7 +149,7 @@ void InitGame(Player *player, Enemy *enemy) {
 
 // Update game (one frame)
 void UpdateGame(Player *player, Enemy *enemy) {
-  if (!gameOver) {
+  if (!gameOver && activeEnemies > 0) {
     // Player movement
     if (IsKeyDown(KEY_D))
       player->rec.x += player->speed.x;
@@ -172,15 +173,17 @@ void UpdateGame(Player *player, Enemy *enemy) {
       if (enemy[i].active) {
         enemy[i].rec.x -= enemy[i].speed.x;
 
+        // Enemy vs wall
         if (enemy[i].rec.x < 0) {
           enemy[i].active = false;
+          activeEnemies--;
         }
       }
     }
 
     // Wall behaviour vs Player
-    if (player->rec.x <= 0)
-      player->rec.x = 0;
+    if (player->rec.x >= MeasureText("player number:", 40))
+      player->rec.x = MeasureText("player number:", 40);
     if (player->rec.x + player->rec.width >= screenWidth)
       player->rec.x = screenWidth - player->rec.width;
     if (player->rec.y <= 120)
@@ -214,6 +217,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
             if (CheckCollisionRecs(shoot[i].rec, enemy[j].rec)) {
               shoot[i].active = false;
               enemy[j].active = false;
+              activeEnemies--;
               shootRate = 0;
               enemiesKill++;
               player->score += 100;
@@ -231,6 +235,7 @@ void UpdateGame(Player *player, Enemy *enemy) {
     if (IsKeyPressed(KEY_ENTER)) {
       gameOver = false;
       player->isFirst = false;
+      activeEnemies = NUM_MAX_ENEMIES;
     }
   }
 }
@@ -241,7 +246,7 @@ void DrawGame(Player *player, Enemy *enemy) {
 
   ClearBackground(RAYWHITE);
 
-  if (!gameOver) {
+  if (!gameOver && activeEnemies > 0) {
     DrawRectangleRec(player->rec, player->color);
 
     for (int i = 0; i < NUM_MAX_ENEMIES; i++) {
@@ -254,10 +259,17 @@ void DrawGame(Player *player, Enemy *enemy) {
         DrawRectangleRec(shoot[i].rec, shoot[i].color);
     }
 
+    // Player max distance
+    DrawRectangle(MeasureText("player number:", 40) + player->rec.width, 120, 5,
+                  screenHeight - 120, BLACK);
+
     // Status box
     DrawRectangle(0, 0, screenWidth, 120, GREEN);
     DrawText(TextFormat("%04i", player->score), 20, 20, 40, GRAY);
     DrawText(TextFormat("player number: %i", player->num), 20, 60, 40, GRAY);
+    DrawText(TextFormat("targets left: %i", activeEnemies),
+             screenWidth - MeasureText("targets left: %i", 40) - 50, 20, 40,
+             GRAY);
 
     if (victory)
       DrawText("YOU WIN", screenWidth / 2 - MeasureText("YOU WIN", 40) / 2,
