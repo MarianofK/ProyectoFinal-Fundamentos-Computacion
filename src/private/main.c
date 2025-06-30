@@ -1,7 +1,9 @@
 #include "main.h"
+#include "definitions.h"
+
+extern int mini_game(void);
 
 int main(void) {
-
     InitializeWindow();
     InitAudioDevice();
     InitSettings();
@@ -25,6 +27,8 @@ int main(void) {
                     UpdateMenu();
                 }
                 break;
+            case STATE_MINI_GAME:
+                mini_game();
             case STATE_ARCH_SELECTION:
                 DrawText("Seleccion de arcos", screenWidth / 2 - 150, 10, 30, BLACK);
                 switch (selection) {
@@ -92,9 +96,11 @@ int main(void) {
 
         EndDrawing();
     }
-    
-    UnloadPlayer(&player1);
-    UnloadPlayer(&player2);
-    CloseWindow();
-    return 0;
+    EndDrawing();
+  }
+
+  UnloadPlayer(&player1);
+  UnloadPlayer(&player2);
+  CloseWindow();
+  return 0;
 }
