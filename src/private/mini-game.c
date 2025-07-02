@@ -211,7 +211,6 @@ void UpdateGame(Player *player, Enemy *enemy) {
     for (int i = 0; i < NUM_MAX_ENEMIES; i++) {
       if (CheckCollisionRecs(player->rec, enemy[i].rec)) {
         gameOver = true;
-        // TODO handle shots maybe here
       }
     }
 
@@ -274,6 +273,8 @@ void UpdateGame(Player *player, Enemy *enemy) {
       gameOver = false;
       player->isFirst = false;
       activeEnemies = NUM_MAX_ENEMIES;
+      for (int i = 0; i < times_shoot; i++)
+        shoot[i].active = false;
       times_shoot = 0;
     }
   }
