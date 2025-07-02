@@ -7,6 +7,8 @@
 #define initialWidth 1366
 #define initialHeight 768
 
+#include "raylib.h"
+
 /// @brief Enumeration para controlar la accion a realizar.
 /// | STATE_MENU | STATE_GAME| STATE_MINI_GAME| STATE_SETTINGS | STATE_EXIT |
 typedef enum {
@@ -34,5 +36,7 @@ extern SelectionState selection;
 /// @brief Control de dimensiones
 extern int screenWidth;
 extern int screenHeight;
+
+extern Music gameMusic;
 
 #endif

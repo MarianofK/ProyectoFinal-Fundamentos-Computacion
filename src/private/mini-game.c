@@ -62,6 +62,8 @@ static void UnloadGame(void); // Unload game
 static void UpdateDrawFrame(Player *, Enemy *, Texture,
                             Font); // Update and Draw (one frame)
 
+static void ClearProjectiles();
+
 //------------------------------------------------------------------------------------
 // Mini game entry point
 //------------------------------------------------------------------------------------
@@ -228,8 +230,8 @@ void UpdateGame(Player *player, Enemy *enemy) {
     }
 
     // Wall behaviour vs Player
-    if (player->rec.x >= MeasureText("player number:", 40))
-      player->rec.x = MeasureText("player number:", 40);
+    if (player->rec.x >= MeasureText("Jugador:", 40))
+      player->rec.x = MeasureText("Jugador:", 40);
     if (player->rec.x + player->rec.width >= screenWidth)
       player->rec.x = screenWidth - player->rec.width;
     if (player->rec.y <= 120)
@@ -345,6 +347,7 @@ void DrawGame(Player *player, Enemy *enemy, Texture background,
 // Update and Draw (one frame)
 void UpdateDrawFrame(Player *player, Enemy *enemy, Texture background,
                      Font status_font) {
+  UpdateMusicStream(gameMusic);
   UpdateGame(player, enemy);
   DrawGame(player, enemy, background, status_font);
 }

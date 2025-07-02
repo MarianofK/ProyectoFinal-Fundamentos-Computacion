@@ -1,0 +1,8 @@
+﻿Index,Name,Range,Damage,Speed,Cost,TextureRoute,Type
+4,Energia,1,20,500,0,/arch_types/trueno.png,/arch_types/trueno.png
+2,Rango,2,20,500,200,/arch_types/trueno.png,/player/arch.png
+6,Daño,1,30,500,200,/arch_types/trueno.png,/player/arch.png
+1,PEM,2,40,500,200,/arch_types/trueno.png,/player/arch.png
+3,Descarga,2,50,500,200,/arch_types/trueno.png,/player/arch.png
+5,Potencia +,2,60,500,200,/arch_types/trueno.png,/player/arch.png
+7,Rango,3,60,500,200,/arch_types/trueno.png,/player/arch.png
