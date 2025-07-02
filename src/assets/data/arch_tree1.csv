@@ -1,8 +1,8 @@
-﻿Index,Name,Cadence,Damage,Cost,TextureRoute
-4,Fuego,1,20,200,/textures/fuego.png
-2,+ Daño,1,20,200,/player/arch.png
-6,+ Cadencia,1,20,200,/player/arch.png
-1,++ Daño,1,20,200,/player/arch.png
-3,++ Cadencia,1,20,200,/player/arch.png
-5,+++ Daño,1,20,200,/player/arch.png
-7,+++ Cadencia,1,20,200,/player/arch.png
+﻿Index,Name,Range,Damage,Speed,Cost,TextureRoute,Type
+4,Fuego,1,20,500,0,/arch_types/fuego.png,/arch_types/fuego.png
+2,Rango I,2,20,500,200,/arch_types/fuego.png,/player/arch.png
+6,Daño I,1,40,500,200,/arch_types/fuego.png,/player/arch.png
+1,Rango II,3,10,500,200,/arch_types/fuego.png,/player/arch.png
+3,Daño II,2,40,500,200,/arch_types/fuego.png,/player/arch.png
+5,Rango II,4,30,500,200,/arch_types/fuego.png,/player/arch.png
+7,Daño II,4,50,500,200,/arch_types/fuego.png,/player/arch.png

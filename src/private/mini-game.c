@@ -1,5 +1,6 @@
 #include "definitions.h"
 #include "raylib.h"
+#include "stdlib.h"
 
 //----------------------------------------------------------------------------------
 // Some Defines
@@ -54,10 +55,13 @@ static void DrawGAME(Player *, Enemy *);        // Draw game (one frame)
 static void UnloadGame(void);                   // Unload game
 static void UpdateDrawFrame(Player *, Enemy *); // Update and Draw (one frame)
 
+static void ClearProjectiles();
+
 //------------------------------------------------------------------------------------
 // Mini game entry point
 //------------------------------------------------------------------------------------
 int mini_game(void) {
+
   // Player declaration
   Player player_1 = {0};
   Player player_2 = {0};
@@ -279,6 +283,8 @@ void DrawGame(Player *player, Enemy *enemy) {
                   2,
           GetScreenHeight() / 2 - 50, 20, BLACK);
 
+          ClearProjectiles();
+
     } else if (player->num == 2) {
       DrawText("TERMINO TU TURNO, PRESIONA [ENTER] PARA TERMINAR",
                GetScreenWidth() / 2 -
@@ -286,9 +292,18 @@ void DrawGame(Player *player, Enemy *enemy) {
                        "TERMINO TU TURNO, PRESIONA [ENTER] PARA TERMINAR", 20) /
                        2,
                GetScreenHeight() / 2 - 50, 20, BLACK);
+
+               ClearProjectiles();
     }
   }
   EndDrawing();
+}
+
+void ClearProjectiles(){
+  for (int i = 0; i < NUM_SHOOTS; i++){
+    shoot[i] = (Shoot){0};
+  }
+  
 }
 
 // Unload game variables
@@ -298,6 +313,7 @@ void UnloadGame(void) {
 
 // Update and Draw (one frame)
 void UpdateDrawFrame(Player *player, Enemy *enemy) {
+  UpdateMusicStream(gameMusic);
   UpdateGame(player, enemy);
   DrawGame(player, enemy);
 }
