@@ -51,8 +51,6 @@ void DrawMenu(int x, int y) {
     InitPlayer(&player1, (3 * TILE_SIZE) / 2, (3 * TILE_SIZE) / 2, 200.f, 1);
     InitPlayer(&player2, TILE_SIZE * (MAP_WIDTH - 1.5), TILE_SIZE * (MAP_HEIGHT - 1.5), 200.f, 2);
     PlayLevelMusic(ASSETS_PATH "/sounds/nivel_1.wav");
-    player1.currentArch = NULL;
-    player2.currentArch = NULL;
     state = STATE_MINI_GAME;
   }
 

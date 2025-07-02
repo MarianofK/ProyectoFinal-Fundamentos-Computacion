@@ -1,5 +1,6 @@
 #include "player.h"
 #include "definitions.h"
+#include "menu.h"
 
 Player player1 = {0};
 Player player2 = {0};
@@ -24,15 +25,11 @@ void InitPlayer(Player *player, float x, float y, float speed, int playerNumber)
 
 void DrawPlayer(Player *player)
 {
-  DrawTextureV(player->texture,
-               (Vector2){player->position.x - player->texture.width / 2,
-                         player->position.y - player->texture.height / 2},
-               WHITE);
-  DrawText(TextFormat("Jugador 1: %.1f", player1.life), 900, 30, 20, BLACK);
-  DrawText(TextFormat("Puntuacion 1: %i", score_player1), 900, 60, 20, BLACK);
-  DrawText(TextFormat("Jugador 2: %.1f", player2.life), 900, 90, 20, BLACK);
-  DrawText(TextFormat("Puntuacion 2: %i", score_player2), 900, 120, 20,
-           BLACK);
+  DrawTextureV(player->texture, (Vector2){player->position.x - player->texture.width / 2, player->position.y - player->texture.height / 2}, WHITE);
+  DrawTextCentered(TextFormat("Jugador 1: %.1f", player1.life), 900, 30, 20, WHITE);
+  DrawTextCentered(TextFormat("Puntuacion 1: %i", score_player1), 900, 60, 20, WHITE);
+  DrawTextCentered(TextFormat("Jugador 2: %.1f", player2.life), 900, 90, 20, WHITE);
+  DrawTextCentered(TextFormat("Puntuacion 2: %i", score_player2), 900, 120, 20, WHITE);
 }
 
 void UnloadPlayer(Player *player) { UnloadTexture(player->texture); }

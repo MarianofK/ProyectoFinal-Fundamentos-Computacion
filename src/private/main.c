@@ -111,15 +111,15 @@ int main(void)
         state = STATE_MENU;
       break;
     case STATE_ARCH_UPGRADE:
-      DrawTextCentered("Actualizacion de arcos", screenWidth / 2, 10, 30, BLACK);
+      DrawTextCentered("Actualizacion de arcos", screenWidth / 2, 10, 30, WHITE);
       switch (selection)
       {
       case SELECTION_PLAYER_1:
-        DrawTextCentered("Jugador 1", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
+        DrawTextCentered("Jugador 1", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, WHITE);
         DrawArchsToUpgrade(screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT / 2, player1.playerNumber);
         break;
       case SELECTION_PLAYER_2:
-        DrawTextCentered("Jugador 2", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
+        DrawTextCentered("Jugador 2", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, WHITE);
         DrawArchsToUpgrade(screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT / 2, player2.playerNumber);
         break;
       default:

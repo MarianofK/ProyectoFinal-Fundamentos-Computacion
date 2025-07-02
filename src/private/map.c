@@ -22,7 +22,7 @@ void DrawMap() {
     );
     for (int y = 0; y < MAP_HEIGHT; y++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
-            map[y][x] == 1 ? DrawTextureV(brickWall, (Vector2){ x * TILE_SIZE, y * TILE_SIZE}, WHITE) : DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, GREEN);
+            map[y][x] == 1 ? DrawTextureV(brickWall, (Vector2){ x * TILE_SIZE, y * TILE_SIZE}, WHITE) : DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, LIGHTGRAY);
         }
     }
 }
