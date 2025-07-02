@@ -12,4 +12,6 @@
 #include "arch.h"
 #include "start_animation.h"
 
+extern GameState old_state;
+
 #endif

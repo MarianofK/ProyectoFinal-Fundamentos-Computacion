@@ -6,6 +6,21 @@
 #include "functions.h"
 #include "player.h"
 
+/// @brief Imagen de fondo del menu
+extern Texture2D backgroundMenu;
+
+/// @brief Imagen de fondo
+extern Texture2D background;
+
+/// @brief Imagen de boton pulsado
+extern Texture2D btnImageHover;
+
+/// @brief Imagen normal del boton
+extern Texture2D btnImage;
+
+/// @brief Inicializa los recursos para el menu
+void InitMenu();
+
 /// @brief Dibuja el menu centrado con respecto a un punto, mostrando un titulo y las opciones de empezar, ajustes y salir.
 /// @param x Posicion del menu en X
 /// @param y Posicion del menu en Y
@@ -15,12 +30,5 @@ void DrawMenu(int x, int y);
 /// @param x Posicion del menu en X
 /// @param y Posicion del menu en Y
 void DrawEndMenu(int x, int y);
-
-/// @brief Detecta la colision del mouse y actualiza el estado del juego.
-/// @return Devuelve un valor del enum GameState.
-void UpdateMenu();
-
-/// @brief Actualizar el menu del final del juego
-void UpdateEndMenu();
 
 #endif

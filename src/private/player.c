@@ -4,8 +4,8 @@
 Player player1 = {0};
 Player player2 = {0};
 
-void InitPlayer(Player *player, float x, float y, float speed,
-                int playerNumber) {
+void InitPlayer(Player *player, float x, float y, float speed, int playerNumber)
+{
 
   player->life = 100;
   player->speed = speed;
@@ -19,13 +19,11 @@ void InitPlayer(Player *player, float x, float y, float speed,
   player->texture = LoadTextureFromImage(img);
   UnloadImage(img);
 
-  player->currentProjectile = *projectiles;
-  if(player->currentArch != NULL){
-    player->currentProjectile.damage = player->currentArch->damage;
-  }
+  player->currentProjectile = *projectile;
 }
 
-void DrawPlayer(Player *player) {
+void DrawPlayer(Player *player)
+{
   DrawTextureV(player->texture,
                (Vector2){player->position.x - player->texture.width / 2,
                          player->position.y - player->texture.height / 2},
@@ -39,13 +37,15 @@ void DrawPlayer(Player *player) {
 
 void UnloadPlayer(Player *player) { UnloadTexture(player->texture); }
 
-void UpdatePlayer(Player *player, int playerNumber) {
+void UpdatePlayer(Player *player, int playerNumber)
+{
 
   float delta = GetFrameTime();
 
   Vector2 input = {0, 0};
 
-  switch (playerNumber) {
+  switch (playerNumber)
+  {
   case 1:
     // Controles del primer jugador
     if (IsKeyDown(KEY_W))
@@ -79,7 +79,8 @@ void UpdatePlayer(Player *player, int playerNumber) {
   Vector2 moveX = {move.x, 0};
   Collision colX = CheckCollisionWithMap(moveX, &player->position,
                                          PLAYER_SIZE / 2, false, 0);
-  if (!colX.hasColided) {
+  if (!colX.hasColided)
+  {
     player->position.x += moveX.x;
   }
 
@@ -87,7 +88,8 @@ void UpdatePlayer(Player *player, int playerNumber) {
   Vector2 moveY = {0, move.y};
   Collision colY = CheckCollisionWithMap(moveY, &player->position,
                                          PLAYER_SIZE / 2, false, 0);
-  if (!colY.hasColided) {
+  if (!colY.hasColided)
+  {
     player->position.y += moveY.y;
   }
 }

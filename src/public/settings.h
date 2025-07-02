@@ -16,11 +16,4 @@ void DrawSettings(int x, int y);
 /// @brief Actualiza el nuevo volumen
 void UpdateSettings();
 
-/// @brief Comprueba si se pulso algun boton
-void BackToMenu();
-
-/// @brief Obtiene el volumen actual
-/// @return Retorna el valor del volumen entre (0 - 1)
-float GetVolume();
-
 #endif

@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "map.h"
+#include "arch.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -15,7 +16,6 @@ typedef struct Projectile {
     float damage;
     float range;
     float speed;
-    int owner;
     struct Projectile *previous;
     struct Projectile *next;
 } Projectile;
@@ -24,7 +24,7 @@ typedef struct Projectile {
 extern Projectile* projectile_in_level;
 
 /// @brief Arbol de proyectiles
-extern Projectile* projectiles;
+extern Projectile* projectile;
 
 /// @brief Inicializa los proyectiles
 void InitProjectiles();
@@ -32,7 +32,7 @@ void InitProjectiles();
 /// @brief Dispara un proyectile desde la posicion del jugador
 /// @param playerPosition Posicion del jugador
 /// @param playerDirection Direccion del jugador
-void Shoot(Projectile *projectile, Vector2 playerPosition, Vector2 playerDirection);
+void Shoot(Projectile *projectile, Vector2 playerPosition, Vector2 playerDirection, Arch arch);
 
 /// @brief Actualiza cada proyectil en pantalla y si llegaron a su limite los elimina
 void UpdateProjectile();

@@ -61,6 +61,7 @@ static void ClearProjectiles();
 // Mini game entry point
 //------------------------------------------------------------------------------------
 int mini_game(void) {
+
   // Player declaration
   Player player_1 = {0};
   Player player_2 = {0};
@@ -312,6 +313,7 @@ void UnloadGame(void) {
 
 // Update and Draw (one frame)
 void UpdateDrawFrame(Player *player, Enemy *enemy) {
+  UpdateMusicStream(gameMusic);
   UpdateGame(player, enemy);
   DrawGame(player, enemy);
 }

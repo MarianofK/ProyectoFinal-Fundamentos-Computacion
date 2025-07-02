@@ -2,7 +2,7 @@
 
 Projectile *projectile_in_level = NULL;
 
-Projectile *projectiles = NULL;
+Projectile *projectile = NULL;
 
 void InitProjectiles(){
     
@@ -11,24 +11,26 @@ void InitProjectiles(){
     *initial = (Projectile) {
         (Vector2){ 0, 0 },
         (Vector2){ 0, 0 },
-        10.f,
-        400.f,
-        500.f
+        0.f,
+        0.f,
+        0.f
     };
 
-    projectiles = initial;
+    projectile = initial;
 }
 
-void Shoot(Projectile *projectile, Vector2 playerPosition, Vector2 playerDirection){
+void Shoot(Projectile *projectile, Vector2 playerPosition, Vector2 playerDirection, Arch arch){
 
     Projectile* newProjectile = malloc(sizeof(Projectile));
-    newProjectile->damage = projectile->damage;
-    newProjectile->speed = projectile->speed;
-    newProjectile->range = projectile->range;
 
     // Inicializar la direccion y posicion
     newProjectile->direction = playerDirection;
     newProjectile->position = (Vector2){playerPosition.x + (playerDirection.x * (PLAYER_SIZE * 0.7)), playerPosition.y + (playerDirection.y * (PLAYER_SIZE * 0.7))};
+
+    // Otros datos del proyectil
+    newProjectile->damage = arch.damage;
+    newProjectile->range = arch.range;
+    newProjectile->speed = arch.speed;
 
     // Apilar el nuevo proyectil
     newProjectile->next = projectile_in_level;

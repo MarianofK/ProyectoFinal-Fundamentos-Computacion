@@ -3,8 +3,8 @@
 
 #define MAX_ARCHES 128
 #define MAX_LINE_LENGTH 256
-#define ARCH_CARD_HEIGHT 200
-#define ARCH_CARD_WIDTH 150
+#define ARCH_CARD_HEIGHT 300
+#define ARCH_CARD_WIDTH 300
 
 #include "raylib.h"
 #include "stdio.h"
@@ -18,8 +18,9 @@
 typedef struct Arch {
     int index;
     char *name;
-    float cadence;
+    float range;
     int damage;
+    float speed;
     int cost;
     Texture2D texture;
     Texture2D arch;
@@ -27,9 +28,15 @@ typedef struct Arch {
     struct Arch *next;
 } Arch;
 
+
+/// @brief Imagen de las cartas
+extern Texture2D cardImage;
+extern Texture2D cardImageBloqued;
+
 /// @brief Arbol de arcos
 extern Arch *arch1, *arch2, *arch3;
 
+/// @brief Control de seleccion de arcos
 extern bool bSelected;
 
 /// @brief Inicializar los arcos

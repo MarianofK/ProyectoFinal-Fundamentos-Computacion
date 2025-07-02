@@ -3,9 +3,14 @@
 
 extern int mini_game(void);
 
-int main(void) {
+GameState old_state = STATE_EXIT;
+
+int main(void)
+{
   InitializeWindow();
   InitAudioDevice();
+
+  InitMenu();
   InitSettings();
   InitMap();
   InitArchs();
@@ -13,99 +18,109 @@ int main(void) {
 
   InitAnimation();
 
-  while (!WindowShouldClose() && state != STATE_EXIT) {
+  while (!WindowShouldClose() && state != STATE_EXIT)
+  {
     BeginDrawing();
+    UpdateMusicStream(gameMusic);
     ClearBackground((Color){240, 240, 240, 255});
 
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
 
-    switch (state) {
-    case STATE_MENU:
-      DrawMenu(screenWidth / 2, screenHeight / 2);
-      if (stage == STAGE_DONE) {
-        UpdateMenu();
-      }
-      break;
-    case STATE_MINI_GAME:
-      mini_game();
-    case STATE_ARCH_SELECTION:
-      DrawText("Seleccion de arcos", screenWidth / 2 - 150, 10, 30, BLACK);
-      switch (selection) {
-      case SELECTION_PLAYER_1:
-        DrawText("Jugador 1", screenWidth / 2 - 50,
-                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 20, BLACK);
-        DrawSelectionArch(screenWidth / 2,
-                          screenHeight / 2 - ARCH_CARD_HEIGHT / 2,
-                          player1.playerNumber);
+    if(old_state != state){
+      old_state = state;
+      switch (state)
+      {
+      case STATE_MENU:
+        PlayLevelMusic(ASSETS_PATH "/sounds/menu.wav");
         break;
-      case SELECTION_PLAYER_2:
-        DrawText("Jugador 2", screenWidth / 2 - 50,
-                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 20, BLACK);
-        DrawSelectionArch(screenWidth / 2,
-                          screenHeight / 2 - ARCH_CARD_HEIGHT / 2,
-                          player2.playerNumber);
+      case STATE_MINI_GAME:
+        PlayLevelMusic(ASSETS_PATH "/sounds/nivel_1.wav");
+        break;
+      case STATE_GAME:
+        PlayLevelMusic(ASSETS_PATH "/sounds/nivel_2.wav");
         break;
       default:
         break;
       }
-      if (IsKeyPressed(KEY_Q)) {
+    }
+
+    switch (state)
+    {
+    case STATE_MENU:
+      DrawMenu(screenWidth / 2, screenHeight / 2);
+      break;
+    case STATE_MINI_GAME:
+      mini_game();
+    case STATE_ARCH_SELECTION:
+      DrawTextCentered("Seleccion de arcos", screenWidth / 2, 10, 30, WHITE);
+      switch (selection)
+      {
+      case SELECTION_PLAYER_1:
+        DrawTextCentered("Jugador 1", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 20, WHITE);
+        DrawSelectionArch(screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT / 2, player1.playerNumber);
+        break;
+      case SELECTION_PLAYER_2:
+        DrawTextCentered("Jugador 2", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 20, WHITE);
+        DrawSelectionArch(screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT / 2, player2.playerNumber);
+        break;
+      default:
+        break;
+      }
+      if (IsKeyPressed(KEY_Q))
+      {
         selection = SELECTION_PLAYER_1;
         state = STATE_MENU;
       }
       break;
     case STATE_GAME:
-      if (player1.life > 0 && player2.life > 0) {
-        if(player1.currentArch != NULL && &player1.currentProjectile != NULL){
+      if (player1.life > 0 && player2.life > 0)
+      {
+        if (player1.currentArch != NULL && &player1.currentProjectile != NULL)
+        {
           player1.currentProjectile.damage = player1.currentArch->damage;
-          player1.currentProjectile.range = player1.currentArch->cadence;
+          player1.currentProjectile.range = player1.currentArch->range;
         }
-        if(player2.currentArch != NULL && &player2.currentProjectile != NULL){
+        if (player2.currentArch != NULL && &player2.currentProjectile != NULL)
+        {
           player2.currentProjectile.damage = player2.currentArch->damage;
-          player2.currentProjectile.range = player2.currentArch->cadence;
+          player2.currentProjectile.range = player2.currentArch->range;
         }
         DrawMap();
         if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyDown(KEY_A) ||
             IsKeyDown(KEY_D))
           UpdatePlayer(&player1, 1);
-        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_RIGHT) ||
-            IsKeyDown(KEY_LEFT))
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT))
           UpdatePlayer(&player2, 2);
         DrawPlayer(&player1);
         DrawPlayer(&player2);
         DrawArch(player1.currentArch, player1.position, player1.direction);
         DrawArch(player2.currentArch, player2.position, player2.direction);
         if (IsKeyPressed(KEY_E))
-          Shoot(&player1.currentProjectile, player1.position,
-                player1.direction);
+          Shoot(&player1.currentProjectile, player1.position, player1.direction, *player1.currentArch);
         if (IsKeyPressed(KEY_ENTER))
-          Shoot(&player2.currentProjectile, player2.position,
-                player2.direction);
+          Shoot(&player2.currentProjectile, player2.position, player2.direction, *player2.currentArch);
         UpdateProjectile();
-      } else {
+      }
+      else
+      {
         ClearProjectiles();
         DrawEndMenu(screenWidth / 2, screenHeight / 2);
-        UpdateEndMenu();
       }
       if (IsKeyPressed(KEY_Q))
         state = STATE_MENU;
       break;
     case STATE_ARCH_UPGRADE:
-      DrawText("Actualizacion de arcos", screenWidth / 2 - 200, 10, 30, BLACK);
-      switch (selection) {
+      DrawTextCentered("Actualizacion de arcos", screenWidth / 2, 10, 30, BLACK);
+      switch (selection)
+      {
       case SELECTION_PLAYER_1:
-        DrawText("Jugador 1", screenWidth / 2 - 50,
-                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
-        DrawArchsToUpgrade(screenWidth / 2,
-                           screenHeight / 2 - ARCH_CARD_HEIGHT / 2,
-                           player1.playerNumber);
+        DrawTextCentered("Jugador 1", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
+        DrawArchsToUpgrade(screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT / 2, player1.playerNumber);
         break;
       case SELECTION_PLAYER_2:
-        DrawText("Jugador 2", screenWidth / 2 - 50,
-                 screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
-        DrawArchsToUpgrade(screenWidth / 2,
-                           screenHeight / 2 - ARCH_CARD_HEIGHT / 2,
-                           player2.playerNumber);
+        DrawTextCentered("Jugador 2", screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT * 0.8, 30, BLACK);
+        DrawArchsToUpgrade(screenWidth / 2, screenHeight / 2 - ARCH_CARD_HEIGHT / 2, player2.playerNumber);
         break;
       default:
         break;
@@ -114,7 +129,6 @@ int main(void) {
     case STATE_SETTINGS:
       DrawSettings(screenWidth / 2, screenHeight / 2);
       UpdateSettings();
-      BackToMenu();
       if (IsKeyPressed(KEY_Q))
         state = STATE_MENU;
       break;
@@ -132,6 +146,8 @@ int main(void) {
   FreeArchTree(arch1);
   FreeArchTree(arch2);
   FreeArchTree(arch3);
+  UnloadMusicStream(gameMusic);
+  CloseAudioDevice();
   CloseWindow();
 
   return 0;
